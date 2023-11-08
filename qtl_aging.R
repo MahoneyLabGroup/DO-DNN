@@ -78,3 +78,20 @@ out <- scan1(apr, score, k, addcovar = covar, cores= detectCores())
 
 operm <- scan1perm(apr, score,k,  addcovar = covar, n_perm=100, cores=detectCores())
 
+summary_table<-data.frame(unclass(summary(operm, alpha=c(0.01,  0.05, 0.1))))
+
+
+plot(out, cross$pmap,ylim=c(0,10))
+
+for (j in 1: dim(summary_table)[1]){
+  abline(h=summary_table[[1]][j],col="red")
+  text(x=400, y =summary_table[[1]][j]+0.12, labels = paste("p=", row.names(summary_table)[j]))
+}
+
+abline(h=mean(operm),col="red")
+
+chr = "6"
+coef_c2 <- scan1coef(apr[,chr], score, k[[chr]], covar)
+
+plot_coefCC(coef_c2, cross$pmap[chr], scan1_output=out,bgcolor="gray95", legend="topleft")
+
